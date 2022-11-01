@@ -24,8 +24,17 @@ def load_data(year):
     return playerstats
 playerstats = load_data(year_selected)
 
+# position selection
+positions = ['PG', 'SG', 'SF', 'PF', 'C']
+position_selected = st.sidebar.multiselect('Position', positions, positions)
+
+# filtering data
+df_pos_selected = playerstats[(playerstats.Pos.isin(position_selected))]
+
+
 st.header('Player play by play stats')
-st.dataframe(playerstats)
+st.write('Data Dimension: ' + str(df_pos_selected.shape[0]) + ' rows and ' + str(df_pos_selected.shape[1]) + ' columns')
+st.dataframe(df_pos_selected)
 
 # download the data as a csv file
 def file_download(df):
@@ -34,4 +43,4 @@ def file_download(df):
     href = f'<a href="data:file/csv;base64,{b64}" download="playerstats.csv">Download CSV File</a>'
     return href
 
-st.markdown(file_download(playerstats), unsafe_allow_html=True)
+st.markdown(file_download(df_pos_selected), unsafe_allow_html=True)
